@@ -36,7 +36,7 @@ public class DepthTrackerShould
             4, //   B C D
             5, //     C D
             6  //       D
-        });
+        }, 3);
 
         // sum(A) = 6
         // sum(B) = 9
