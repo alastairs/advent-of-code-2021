@@ -24,4 +24,24 @@ public class DepthTrackerShould
         var depth = new DepthTracker().Calculate(new[] { 1, 5, 3 });
         Assert.Equal(1, depth);
     }
+
+    [Fact]
+    public void Aggregate_over_a_sliding_window()
+    {
+        var depth = new DepthTracker().Calculate(new[]
+        {
+            1, // A
+            2, // A B
+            3, // A B C
+            4, //   B C D
+            5, //     C D
+            6  //       D
+        });
+
+        // sum(A) = 6
+        // sum(B) = 9
+        // sum(C) = 12
+        // sum(D) = 15
+        Assert.Equal(3, depth);
+    }
 }
