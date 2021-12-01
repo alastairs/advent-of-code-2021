@@ -1,0 +1,21 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:16341",
+      "sslPort": 44388
+    }
+  },
+  "profiles": {
+    "DepthTracker": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:7225;http://localhost:5175",
+      "dotnetRunMessages": true
+    }
+  }
+}
