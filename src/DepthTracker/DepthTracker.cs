@@ -2,9 +2,5 @@
 
 public class DepthTracker
 {
-    public int Calculate(IEnumerable<int> measurements)
-    {
-        var measurementsList = measurements.ToList();
-        return measurementsList.Zip(measurementsList.Skip(1)).Count(m => m.First < m.Second);
-    }
+    public int Calculate(IEnumerable<int> measurements) => measurements.Buffer(2, 1).Count(b => b.First() < b.Last());
 }
