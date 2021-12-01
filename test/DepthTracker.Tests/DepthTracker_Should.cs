@@ -17,4 +17,11 @@ public class DepthTrackerShould
         var depth = new DepthTracker().Calculate(new[] { 3, 2, 1 });
         Assert.Equal(0, depth);
     }
+
+    [Fact]
+    public void Calculates_depth_ignoring_decreases()
+    {
+        var depth = new DepthTracker().Calculate(new[] { 1, 5, 3 });
+        Assert.Equal(1, depth);
+    }
 }
