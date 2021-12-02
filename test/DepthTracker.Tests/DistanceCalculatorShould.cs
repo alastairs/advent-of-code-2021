@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace DepthTracker.Tests;
@@ -13,6 +14,18 @@ public class DistanceCalculatorShould
         var sut = new VectorParser();
         var actual = sut.CreateFrom(commandString);
         Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void Sum_vector_magnitudes_in_a_single_dimension()
+    {
+        var vectors = VectorSamples.Select(vs => vs.Last()).Cast<CourseVector>();
+
+        var xSum = vectors.Sum(v => v.X);
+        Assert.Equal(5, xSum);
+
+        var zSum = vectors.Sum(v => v.Z);
+        Assert.Equal(5, zSum);
     }
 
     public static readonly IEnumerable<IEnumerable<object>> VectorSamples = new[]
