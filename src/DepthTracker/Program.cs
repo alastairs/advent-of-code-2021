@@ -13,4 +13,13 @@ app.MapGet("/depth-tracker", async ctx =>
     await ctx.Response.WriteAsync($"{new DepthTracker.DepthTracker().Calculate(parsed, windowSize)}");
 });
 
+app.MapGet("/distance-calculator", async () =>
+{
+    var text = await File.ReadAllLinesAsync("distance-calculator.txt");
+    var parsed = text.Select(new VectorParser().CreateFrom);
+
+    var (x, y, z) = new DistanceCalculator(parsed).Sums;
+    return new CourseVector(x, y, z);
+});
+
 app.Run();
