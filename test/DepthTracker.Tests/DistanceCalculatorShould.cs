@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -31,45 +30,3 @@ public class DistanceCalculatorShould
         new object[] { "up 3", new CourseVector { Z = -3 } }
     };
 }
-
-public class DistanceCalculator
-{
-    private readonly IEnumerable<CourseVector> _vectors;
-
-    public DistanceCalculator(IEnumerable<CourseVector> vectors)
-    {
-        _vectors = vectors ?? throw new ArgumentNullException(nameof(vectors));
-    }
-
-    public (int x, int y, int z) Sums => (_vectors.Sum(v => v.X), _vectors.Sum(v => v.Y), _vectors.Sum(v => v.Z));
-}
-
-public class VectorParser
-{
-    public CourseVector CreateFrom(string command)
-    {
-        return command.Split(" ") switch
-        {
-            ("forward", var magnitude) => new CourseVector { X = int.Parse(magnitude) },
-            ("down", var magnitude) => new CourseVector { Z = int.Parse(magnitude) },
-            ("up", var magnitude) => new CourseVector { Z = int.Parse("-" + magnitude) },
-            _ => throw new NotImplementedException()
-        };
-    }
-}
-
-public static class ArrayTupleExtensions
-{
-    public static void Deconstruct<T>(this T[] a, out T a0, out T a1)
-    {
-        if (a is not { Length: 2 })
-        {
-            throw new ArgumentException($"Source array must have exactly two elements, but actually has {a.Length}", nameof(a));
-        }
-
-        a0 = a[0];
-        a1 = a[1];
-    }
-}
-
-public record CourseVector(int X = 0, int Y = 0, int Z = 0);
