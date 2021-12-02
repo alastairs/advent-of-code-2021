@@ -1,4 +1,4 @@
-﻿namespace DepthTracker;
+﻿namespace DepthTracker.Utils;
 
 internal static class HttpExtensions
 {

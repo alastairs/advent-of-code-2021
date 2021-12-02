@@ -1,4 +1,4 @@
-﻿namespace DepthTracker;
+﻿namespace DepthTracker.Utils;
 
 public static class ArrayTupleExtensions
 {

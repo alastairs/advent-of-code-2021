@@ -1,4 +1,5 @@
 using DepthTracker;
+using DepthTracker.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();

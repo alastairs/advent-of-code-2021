@@ -1,4 +1,6 @@
-﻿namespace DepthTracker;
+﻿using DepthTracker.Utils;
+
+namespace DepthTracker;
 
 public class VectorParser
 {
