@@ -23,10 +23,27 @@ public class DistanceCalculatorShould
         Assert.True(new DistanceCalculator(vectors).Sums is (5, _, 5));
     }
 
+    [Fact]
+    public void Track_depth_as_a_vector()
+    {
+        var finalPosition = new DistanceCalculator(AimSamples).FinalPosition;
+        Assert.True(finalPosition is { X: 15, Z: 60 }, $"finalPosition is {finalPosition}");
+    }
+
     public static readonly IEnumerable<IEnumerable<object>> VectorSamples = new[]
     {
         new object[] { "forward 5", new CourseVector(5) },
         new object[] { "down 8", new CourseVector { Z = 8 } },
         new object[] { "up 3", new CourseVector { Z = -3 } }
+    };
+
+    private static readonly IEnumerable<CourseVector> AimSamples = new[]
+    {
+        new CourseVector(X: 5),  // forward 5
+        new CourseVector(Z: 5),  // down 5
+        new CourseVector(X: 8),  // forward 8
+        new CourseVector(Z: -3), // up 3
+        new CourseVector(Z: 8),  // down 8
+        new CourseVector(X: 2),  // forward 2
     };
 }
