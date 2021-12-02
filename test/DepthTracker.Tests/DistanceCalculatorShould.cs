@@ -8,7 +8,7 @@ public class DistanceCalculatorShould
 {
     [Theory]
     [MemberData(nameof(VectorSamples))]
-    public void Should_parse_the_course_commands(string commandString, CourseVector expected)
+    public void Parse_the_course_commands(string commandString, CourseVector expected)
     {
         var sut = new VectorParser();
         var actual = sut.CreateFrom(commandString);
