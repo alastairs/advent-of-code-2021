@@ -21,11 +21,7 @@ public class DistanceCalculatorShould
     {
         var vectors = VectorSamples.Select(vs => vs.Last()).Cast<CourseVector>();
 
-        var xSum = vectors.Sum(v => v.X);
-        Assert.Equal(5, xSum);
-
-        var zSum = vectors.Sum(v => v.Z);
-        Assert.Equal(5, zSum);
+        Assert.True(new DistanceCalculator(vectors).Sums is (5, _, 5));
     }
 
     public static readonly IEnumerable<IEnumerable<object>> VectorSamples = new[]
@@ -34,6 +30,18 @@ public class DistanceCalculatorShould
         new object[] { "down 8", new CourseVector { Z = 8 } },
         new object[] { "up 3", new CourseVector { Z = -3 } }
     };
+}
+
+public class DistanceCalculator
+{
+    private readonly IEnumerable<CourseVector> _vectors;
+
+    public DistanceCalculator(IEnumerable<CourseVector> vectors)
+    {
+        _vectors = vectors ?? throw new ArgumentNullException(nameof(vectors));
+    }
+
+    public (int x, int y, int z) Sums => (_vectors.Sum(v => v.X), _vectors.Sum(v => v.Y), _vectors.Sum(v => v.Z));
 }
 
 public class VectorParser
