@@ -12,13 +12,15 @@ namespace DepthTracker.Tests
 
             Assert.Equal(22, diagnostics.Gamma);
             Assert.Equal(9, diagnostics.Epsilon);
+            Assert.Equal(23, diagnostics.O2);
+            Assert.Equal(10, diagnostics.CO2);
         }
 
         [Fact]
         public void Transposer_creates_n_collections_of_m_items_for_m_collections_of_n_items()
         {
             var input = new[] { new[] { 1, 2 } };
-            var output = DiagnosticsReport.Transpose(input);
+            var output = input.Transpose();
             Assert.Equal(input[0].Length, output.Length);
         }
 
@@ -26,7 +28,7 @@ namespace DepthTracker.Tests
         [MemberData(nameof(TransposeTestCases))]
         public void Writes_item_to_transposed_location(int[][] input)
         {
-            var output = DiagnosticsReport.Transpose(input);
+            var output = input.Transpose();
             Assert.Equal(input[0][0], output[0][0]);
             Assert.Equal(input[0][^1], output[^1][0]);
             Assert.Equal(input[^1][^1], output[^1][^1]);
