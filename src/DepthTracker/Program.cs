@@ -21,4 +21,11 @@ app.MapGet("/distance-calculator", async () =>
     return new DistanceCalculator(parsed).FinalPosition;
 });
 
+app.MapGet("/power-consumption", async () =>
+{
+    var text = await File.ReadAllLinesAsync("power-consumption.txt");
+    var diagnostics = DiagnosticsReport.Create(text);
+    return diagnostics;
+});
+
 app.Run();
