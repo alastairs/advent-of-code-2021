@@ -103,5 +103,14 @@ public class BingoBoard
 
     public bool RowIsComplete(int index) => _marked.Skip(index).Take(5).All(b => b is true);
 
-    public bool ColumnIsComplete(int v) => _marked.SkipWhile((_, i) => i % BoardSize != 0).Take(1).All(b => b is true);
+    public bool ColumnIsComplete(int index)
+    {
+        var marked = true;
+        for (var i = index; i < _marked.Length; i += 5)
+        {
+            marked = marked && _marked[i];
+        }
+
+        return marked;
+    }
 }

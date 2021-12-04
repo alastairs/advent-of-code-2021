@@ -28,12 +28,11 @@ public class Bingo
                 Console.WriteLine($"WE HAVE A WINNER!! The {winningNumber} sealed it!");
 
                 var completeRow = Enumerable.Range(0, 5).FirstOrDefault(winningBoard.RowIsComplete, -1);
-                if (completeRow > -1) Console.WriteLine($"Winning board won via complete row {completeRow}");
+                if (completeRow > -1) Console.WriteLine($"Winning board won via complete row {completeRow+1}");
 
-                Enumerable.Range(0, 5).ForEach(i =>
-                {
-                    Console.WriteLine($"Column {i+1} is complete: {winningBoard.ColumnIsComplete(i)}");
-                });
+                var completeColumn = Enumerable.Range(0, 5).FirstOrDefault(winningBoard.ColumnIsComplete, -1);
+                if (completeColumn > -1) Console.WriteLine($"Winning board won via complete column {completeColumn+1}");
+
                 break;
             }
         }
