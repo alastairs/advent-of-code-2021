@@ -53,6 +53,8 @@ public class BingoBoard
     {
         return _marked[row + column];
     }
+
+    internal bool RowIsComplete(int index) => _marked.Skip(index).Take(5).All(b => b is true);
 }
 
 public class BingoShould
@@ -83,6 +85,16 @@ public class BingoShould
 
         Assert.True(board.IsMarked(0, index));
         Assert.False(board.IsMarked(0, index + 1));
+    }
+
+    [Fact]
+    public void RowIsComplete_is_true_if_full_row_is_marked()
+    {
+        var board = new BingoBoard(Sample[2..7]);
+        Board_1_Row_1().SelectMany(ci => ci)
+            .ForEach(ci => board.Mark(ci.called));
+
+        Assert.True(board.RowIsComplete(0));
     }
 
     public static IEnumerable<IEnumerable<CallIndex>> Board_1_Row_1()

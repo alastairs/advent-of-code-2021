@@ -28,4 +28,10 @@ app.MapGet("/power-consumption", async () =>
     return diagnostics;
 });
 
+app.MapGet("/bingo", async () =>
+{
+    var text = await File.ReadAllLinesAsync("bingo.txt");
+    return "Bingo!";
+});
+
 app.Run();
