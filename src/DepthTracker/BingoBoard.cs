@@ -89,6 +89,25 @@ public class BingoBoard
         return @return;
     }
 
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+
+        BingoBoard? other = obj as BingoBoard;
+        if (other is null) return false;
+
+        return _board.SequenceEqual(other._board) &&
+            _marked.SequenceEqual(other._marked);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_board, _marked);
+    }
+
     public override string ToString()
     {
         var @string = new StringBuilder();

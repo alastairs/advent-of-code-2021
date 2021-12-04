@@ -8,15 +8,17 @@ namespace Bingo.Tests;
 public class BingoShould
 {
     public readonly BingoBoard Board1 = new BingoBoard(Sample[2..7]);
+    public readonly BingoBoard Board2 = new BingoBoard(Sample[8..13]);
+    public readonly BingoBoard Board3 = new BingoBoard(Sample[14..^1]);
 
     [Fact]
     public void Parse_input_into_game()
     {
         var bingo = new Bingo(Sample);
         Assert.Equal(Sample[0], string.Join(",", bingo.NumbersToCall));
-        Assert.Equal(Sample[2..7], bingo.Boards.ElementAt(0));
-        Assert.Equal(Sample[8..13], bingo.Boards.ElementAt(1));
-        Assert.Equal(Sample[14..^1], bingo.Boards.ElementAt(2));
+        Assert.Equal(Board1, bingo.Boards.ElementAt(0));
+        Assert.Equal(Board2, bingo.Boards.ElementAt(1));
+        Assert.Equal(Board3, bingo.Boards.ElementAt(2));
     }
 
     [Fact]
