@@ -15,6 +15,24 @@ public class Bingo
         }
     }
 
+    public (int winningNumber, BingoBoard board) FindWinner()
+    {
+        var winningNumber = 0;
+        var winningBoard = new BingoBoard(Array.Empty<string>());
+        foreach (var called in NumbersToCall)
+        {
+            _boards.ForEach(b => b.Mark(called));
+
+            if ((winningBoard = _boards.FirstOrDefault(b => b.HasWon)) != null)
+            {
+                winningNumber = called;
+                break;
+            }
+        }
+
+        return (winningNumber, winningBoard);
+    }
+
     public IEnumerable<int> NumbersToCall { get; }
     public IEnumerable<BingoBoard> Boards => _boards;
 }

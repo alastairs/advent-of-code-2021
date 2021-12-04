@@ -19,6 +19,17 @@ public class BingoShould
         Assert.Equal(Sample[14..^1], bingo.Boards.ElementAt(2));
     }
 
+    [Fact]
+    public void Winner_of_sample_game_is_board_3_with_score_188_and_winning_number_24()
+    {
+        var bingo = new Bingo(Sample);
+
+        var (winningNumber, winningBoard) = bingo.FindWinner();
+        Assert.Equal(bingo.Boards.ElementAt(2), winningBoard);
+        Assert.Equal(188, winningBoard.Score);
+        Assert.Equal(24, winningNumber);
+    }
+
     [Theory, MemberData(nameof(Board_1_Row_1))]
     public void Mark_a_called_number(CallIndex tuple)
     {
