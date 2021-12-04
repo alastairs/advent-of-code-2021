@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -7,18 +6,14 @@ namespace Bingo.Tests;
 
 public class BingoShould
 {
-    public readonly BingoBoard Board1 = new BingoBoard(Sample[2..7]);
-    public readonly BingoBoard Board2 = new BingoBoard(Sample[8..13]);
-    public readonly BingoBoard Board3 = new BingoBoard(Sample[14..^1]);
-
     [Fact]
     public void Parse_input_into_game()
     {
         var bingo = new Bingo(Sample);
         Assert.Equal(Sample[0], string.Join(",", bingo.NumbersToCall));
-        Assert.Equal(Board1, bingo.Boards.ElementAt(0));
-        Assert.Equal(Board2, bingo.Boards.ElementAt(1));
-        Assert.Equal(Board3, bingo.Boards.ElementAt(2));
+        Assert.Equal(new BingoBoard(Sample[2..7]), bingo.Boards.ElementAt(0));
+        Assert.Equal(new BingoBoard(Sample[8..13]), bingo.Boards.ElementAt(1));
+        Assert.Equal(new BingoBoard(Sample[14..^1]), bingo.Boards.ElementAt(2));
     }
 
     [Fact]
@@ -42,19 +37,18 @@ public class BingoShould
         Assert.All(row1, ci => board.IsMarked(0, ci.index + 1));
     }
 
-    [Fact]
-    public void RowIsComplete_is_true_if_full_row_is_marked()
+    [Theory, MemberData(nameof(For_all_boards))]
+    public void RowIsComplete_is_true_if_full_row_is_marked(string[] _, BingoBoard board)
     {
-        Row_1(Board1).Select(ci => ci)
-            .ForEach(ci => Board1.Mark(ci.called));
+        Row_1(board).ForEach(ci => board.Mark(ci.called));
 
-        Assert.True(Board1.RowIsComplete(0));
+        Assert.True(board.RowIsComplete(0));
     }
 
     [Theory, MemberData(nameof(For_all_boards))]
-    public void ColumnIsComplete_is_true_if_full_column_is_marked(string[] rawBoard, BingoBoard board)
+    public void ColumnIsComplete_is_true_if_full_column_is_marked(string[] _, BingoBoard board)
     {
-        var column = ParseSampleSubset(board).Select(r => r.First()).ToArray();
+        var column = ParseRows(board).Select(r => r.First()).ToArray();
         column.ForEach(c => board.Mark(c));
 
         Assert.True(board.ColumnIsComplete(0));
@@ -70,34 +64,23 @@ public class BingoShould
     [Theory, MemberData(nameof(For_all_boards))]
     public void Board_score_is_sum_of_all_unmarked_numbers(string[] rawBoard, BingoBoard board)
     {
-        Row_1(rawBoard).Select(ci => ci)
-            .ForEach(ci => board.Mark(ci.called));
+        Row_1(rawBoard).ForEach(i => board.Mark(i.called));
 
-        Console.WriteLine(board);
         Assert.Equal(
-            ParseSampleSubset(rawBoard[1..^1]).SelectMany(i => i).Sum(),
+            ParseRows(rawBoard[1..]).SelectMany(i => i).Sum(),
             board.Score);
     }
 
-    [Fact]
-    public void Determine_winning_board()
-    {
-        var bingo = new Bingo(Sample);
-    }
-
-    public static IEnumerable<CallIndex> Row_1(string[] board) => 
-        board.First().Split().Where(i => i != string.Empty)
-            .Select((@int, index) => new CallIndex(int.Parse(@int), index));
+    public static IEnumerable<CallIndex> Row_1(string[] board) =>
+        ParseRows(board).First().Select((@int, index) => new CallIndex(@int, index));
 
     public static IEnumerable<IEnumerable<object>> For_all_boards()
     {
-        // for (var i = 2; i < Sample.Length; i += 6)
-        // {
-        //     var rawBoard = Sample[i..(i + 5)];
-        //     yield return new object[] { rawBoard, new BingoBoard(rawBoard) };
-        // }
-
-        yield return new object[] { Sample[2..7], new BingoBoard(Sample[2..7]) };
+        for (var i = 2; i < Sample.Length; i += 6)
+        {
+            var rawBoard = Sample[i..(i + 5)];
+            yield return new object[] { rawBoard, new BingoBoard(rawBoard) };
+        }
     }
 
     public record CallIndex(int called, int index);
@@ -125,7 +108,7 @@ public class BingoShould
         ""
     };
 
-    private int[][] ParseSampleSubset(string[] input) {
+    private static int[][] ParseRows(string[] input) {
         return input.Select(
             l => l.Split()
                 .Where(s => s != string.Empty)
