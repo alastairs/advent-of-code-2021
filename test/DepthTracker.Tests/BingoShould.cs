@@ -6,7 +6,12 @@ namespace Bingo.Tests;
 
 public class BingoShould
 {
-    [Fact]
+    public BingoShould()
+    {
+        DepthTracker.Debug.Enabled = false;
+    }
+
+[Fact]
     public void Parse_input_into_game()
     {
         var bingo = new Bingo(Sample);

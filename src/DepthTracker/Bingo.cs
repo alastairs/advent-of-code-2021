@@ -1,3 +1,5 @@
+using DepthTracker;
+
 namespace Bingo;
 
 public class Bingo
@@ -32,15 +34,15 @@ public class Bingo
                 yield return tuple;
 
                 // debugging here
-                // var (winningNumber, winningBoard) = tuple;
-                // Console.WriteLine($"WE HAVE A WINNER!! The {winningNumber} sealed it!");
+                var (winningNumber, winningBoard) = tuple;
+                Debug.WriteLine($"WE HAVE A WINNER!! The {winningNumber} sealed it!");
 
-                // var winningBoardIndex = Array.IndexOf(_boards.ToArray(), winningBoard) + 1;
-                // var completeRow = Enumerable.Range(0, 5).FirstOrDefault(winningBoard.RowIsComplete, -1);
-                // if (completeRow > -1) Console.WriteLine($"Winning board {winningBoardIndex} won via complete row {completeRow + 1}");
+                var winningBoardIndex = Array.IndexOf(_boards.ToArray(), winningBoard) + 1;
+                var completeRow = Enumerable.Range(0, 5).FirstOrDefault(winningBoard.RowIsComplete, -1);
+                if (completeRow > -1) Debug.WriteLine($"Winning board {winningBoardIndex} won via complete row {completeRow + 1}");
 
-                // var completeColumn = Enumerable.Range(0, 5).FirstOrDefault(winningBoard.ColumnIsComplete, -1);
-                // if (completeColumn > -1) Console.WriteLine($"Winning board {winningBoardIndex} won via complete column {completeColumn + 1}");
+                var completeColumn = Enumerable.Range(0, 5).FirstOrDefault(winningBoard.ColumnIsComplete, -1);
+                if (completeColumn > -1) Debug.WriteLine($"Winning board {winningBoardIndex} won via complete column {completeColumn + 1}");
             }
         }
     }

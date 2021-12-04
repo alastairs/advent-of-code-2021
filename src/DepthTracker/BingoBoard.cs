@@ -1,4 +1,5 @@
 using System.Text;
+using DepthTracker;
 
 namespace Bingo;
 
@@ -10,7 +11,13 @@ public class BingoBoard
     private bool[] _marked = new bool[BoardSize * BoardSize];
 
     public bool HasWon =>
-        Enumerable.Range(0, BoardSize).Any(i => RowIsComplete(i) || ColumnIsComplete(i));
+        Enumerable.Range(0, BoardSize).Any(i =>
+        {
+            Debug.WriteLine(this);
+            Debug.WriteLine($"Row {i + 1} is complete: {RowIsComplete(i).BoolToString()}");
+            Debug.WriteLine($"Column {i + 1} is complete: {ColumnIsComplete(i).BoolToString()}");
+            return RowIsComplete(i) || ColumnIsComplete(i);
+        });
 
     public int Score
     {
@@ -104,10 +111,10 @@ public class BingoBoard
     public bool RowIsComplete(int index)
     {
         var marked = true;
-        for (var i = index; i < BoardSize; i++)
+        int address = index * BoardSize;
+        for (var i = address; i < address + BoardSize; i++)
         {
-            var address = index * BoardSize;
-            marked = marked && _marked[address];
+            marked = marked && _marked[i];
         }
         
         return marked;
@@ -122,14 +129,5 @@ public class BingoBoard
         }
 
         return marked;
-    }
-
-    private static string BoolToString(bool value)
-    {
-        return value ? "✅" : "❌";
-    }
-
-    private static string ArrayToString<T>(T[] array) {
-        return $"[{string.Join(", ", array)}]";
     }
 }
