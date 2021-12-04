@@ -61,6 +61,8 @@ public class BingoBoard
 
 public class BingoShould
 {
+    public readonly BingoBoard Board1 = new BingoBoard(Sample[2..7]);
+
     [Fact]
     public void Parse_input_into_game()
     {
@@ -81,34 +83,31 @@ public class BingoShould
     public void Mark_a_called_number(CallIndex tuple)
     {
         var (called, index) = tuple;
-        var board = new BingoBoard(Sample[2..7]);
+        Board1.Mark(called);
 
-        board.Mark(called);
-
-        Assert.True(board.IsMarked(0, index));
-        Assert.False(board.IsMarked(0, index + 1));
+        Assert.True(Board1.IsMarked(0, index));
+        Assert.False(Board1.IsMarked(0, index + 1));
     }
 
     [Fact]
     public void RowIsComplete_is_true_if_full_row_is_marked()
     {
-        var board = new BingoBoard(Sample[2..7]);
         Board_1_Row_1().SelectMany(ci => ci)
-            .ForEach(ci => board.Mark(ci.called));
+            .ForEach(ci => Board1.Mark(ci.called));
 
-        Assert.True(board.RowIsComplete(0));
+        Assert.True(Board1.RowIsComplete(0));
     }
 
     [Fact]
     public void ColumnIsComplete_is_true_if_full_column_is_marked()
     {
-        var board = new BingoBoard(Sample[2..7]);
         var column = Sample[2..7].Select(r => r.Split().Where(i => i != string.Empty).First()).Select(s => int.Parse(s)).ToArray();
         Assert.Equal(new[] { 22, 8, 21, 6, 1 }, column);
 
-        column.ForEach(c => board.Mark(c));
+        column.ForEach(c => Board1.Mark(c));
 
-        Assert.True(board.ColumnIsComplete(0));
+        Assert.True(Board1.ColumnIsComplete(0));
+
     }
 
     public static IEnumerable<IEnumerable<CallIndex>> Board_1_Row_1()
