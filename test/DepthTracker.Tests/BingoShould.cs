@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Xunit;
 
 namespace Bingo.Tests;
@@ -11,6 +12,25 @@ public class BingoBoard
 
     private int[] _board;
     private bool[] _marked = new bool[BoardSize*BoardSize];
+
+    public bool HasWon =>
+        Enumerable.Range(0, BoardSize).Any(i => RowIsComplete(i) || ColumnIsComplete(i));
+
+    public int Score
+    {
+        get
+        {
+            if (!HasWon) return 0;
+
+            var score = 0;
+            foreach(var index in Enumerable.Range(0, _board.Length))
+            {
+                if (!_marked[index]) score += _board[index];
+            }
+
+            return score;
+        }
+    }
 
     public BingoBoard(string[] descriptor)
     {
@@ -36,6 +56,18 @@ public class BingoBoard
         }
 
         return @return;
+    }
+
+    public override string ToString()
+    {
+        var @string = new StringBuilder();
+        for (int i = 0; i < Math.Pow(BoardSize, 2); i++)
+        {
+            @string.Append($"{_board[i]}{(_marked[i] ? "*" : " ")}".PadLeft(3, ' ').PadRight(4, ' '));
+            if (i % BoardSize == 4) @string.Append(Environment.NewLine);
+        }
+
+        return @string.ToString();
     }
 
     internal void Mark(int v)
@@ -107,7 +139,26 @@ public class BingoShould
         column.ForEach(c => Board1.Mark(c));
 
         Assert.True(Board1.ColumnIsComplete(0));
+    }
 
+    [Fact]
+    public void Board_score_is_zero_if_board_does_not_win()
+    {
+        Assert.False(Board1.HasWon);
+        Assert.Equal(0, Board1.Score);
+    }
+
+    [Fact]
+    public void Board_score_is_sum_of_all_unmarked_numbers()
+    {
+        var board = Board1;
+        Board_1_Row_1().SelectMany(ci => ci)
+            .ForEach(ci => Board1.Mark(ci.called));
+
+        Console.WriteLine(board);
+        Assert.Equal(
+            ParseSampleSubset(Sample[3..7]).SelectMany(i => i).Sum(),
+            board.Score);
     }
 
     public static IEnumerable<IEnumerable<CallIndex>> Board_1_Row_1()
@@ -145,4 +196,13 @@ public class BingoShould
         " 2  0 12  3  7",
         ""
     };
+
+    private int[][] ParseSampleSubset(string[] input) {
+        return input.Select(
+            l => l.Split()
+                .Where(s => s != string.Empty)
+                .Select(s => int.Parse(s))
+                .ToArray())
+            .ToArray();
+    }
 }
