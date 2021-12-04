@@ -55,6 +55,8 @@ public class BingoBoard
     }
 
     internal bool RowIsComplete(int index) => _marked.Skip(index).Take(5).All(b => b is true);
+
+    internal bool ColumnIsComplete(int v) => _marked.SkipWhile((_, i) => i % BoardSize != 0).Take(1).All(b => b is true);
 }
 
 public class BingoShould
@@ -95,6 +97,18 @@ public class BingoShould
             .ForEach(ci => board.Mark(ci.called));
 
         Assert.True(board.RowIsComplete(0));
+    }
+
+    [Fact]
+    public void ColumnIsComplete_is_true_if_full_column_is_marked()
+    {
+        var board = new BingoBoard(Sample[2..7]);
+        var column = Sample[2..7].Select(r => r.Split().Where(i => i != string.Empty).First()).Select(s => int.Parse(s)).ToArray();
+        Assert.Equal(new[] { 22, 8, 21, 6, 1 }, column);
+
+        column.ForEach(c => board.Mark(c));
+
+        Assert.True(board.ColumnIsComplete(0));
     }
 
     public static IEnumerable<IEnumerable<CallIndex>> Board_1_Row_1()
