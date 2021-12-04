@@ -7,7 +7,7 @@ public class BingoBoard
     private const int BoardSize = 5;
 
     private int[] _board;
-    private bool[] _marked = new bool[BoardSize*BoardSize];
+    private bool[] _marked = new bool[BoardSize * BoardSize];
 
     public bool HasWon =>
         Enumerable.Range(0, BoardSize).Any(i => RowIsComplete(i) || ColumnIsComplete(i));
@@ -101,16 +101,35 @@ public class BingoBoard
         return _marked[row + column];
     }
 
-    public bool RowIsComplete(int index) => _marked.Skip(index).Take(5).All(b => b is true);
+    public bool RowIsComplete(int index)
+    {
+        var marked = true;
+        for (var i = index; i < BoardSize; i++)
+        {
+            var address = index * BoardSize;
+            marked = marked && _marked[address];
+        }
+        
+        return marked;
+    }
 
     public bool ColumnIsComplete(int index)
     {
         var marked = true;
-        for (var i = index; i < _marked.Length; i += 5)
+        for (var i = index; i < _marked.Length; i += BoardSize)
         {
             marked = marked && _marked[i];
         }
 
         return marked;
+    }
+
+    private static string BoolToString(bool value)
+    {
+        return value ? "✅" : "❌";
+    }
+
+    private static string ArrayToString<T>(T[] array) {
+        return $"[{string.Join(", ", array)}]";
     }
 }

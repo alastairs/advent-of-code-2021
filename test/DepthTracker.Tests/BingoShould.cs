@@ -27,6 +27,17 @@ public class BingoShould
         Assert.Equal(24, winningNumber);
     }
 
+    [Fact]
+    public void Final_winner_is_board_2_with_score_148_and_winning_number_13()
+    {
+        var bingo = new Bingo(Sample);
+
+        var (winningNumber, winningBoard) = bingo.FindFinalWinner();
+        Assert.Equal(bingo.Boards.ElementAt(1), winningBoard);
+        Assert.Equal(148, winningBoard.Score);
+        Assert.Equal(13, winningNumber);
+    }
+
     [Theory, MemberData(nameof(For_all_boards))]
     public void Mark_a_called_number(string[] rawBoard, BingoBoard board)
     {
@@ -37,26 +48,25 @@ public class BingoShould
         Assert.All(row1, ci => board.IsMarked(0, ci.index + 1));
     }
 
-    [Theory, MemberData(nameof(For_all_boards))]
-    public void RowIsComplete_is_true_if_full_row_is_marked(string[] _, BingoBoard board)
+    [Theory, MemberData(nameof(For_all_boards_per_dimension))]
+    public void RowIsComplete_is_true_if_full_row_is_marked(string[] rawBoard, BingoBoard board, int rowIndex)
     {
-        Row_1(board).ForEach(ci => board.Mark(ci.called));
-
-        Assert.True(board.RowIsComplete(0));
+        ParseRows(rawBoard).ElementAt(rowIndex).ForEach(board.Mark);
+        Assert.True(board.RowIsComplete(rowIndex));
     }
 
-    [Theory, MemberData(nameof(For_all_boards))]
-    public void ColumnIsComplete_is_true_if_full_column_is_marked(string[] _, BingoBoard board)
+    [Theory, MemberData(nameof(For_all_boards_per_dimension))]
+    public void ColumnIsComplete_is_true_if_full_column_is_marked(string[] rawBoard, BingoBoard board, int columnIndex)
     {
-        var column = ParseRows(board).Select(r => r.First()).ToArray();
-        column.ForEach(c => board.Mark(c));
-
-        Assert.True(board.ColumnIsComplete(0));
+        ParseRows(rawBoard).Select(r => r.ElementAt(columnIndex)).ForEach(board.Mark);
+        Assert.True(board.ColumnIsComplete(columnIndex));
     }
 
-    [Theory, MemberData(nameof(For_all_boards))]
-    public void Board_score_is_zero_if_board_does_not_win(string[] _, BingoBoard board)
+    [Fact]
+    public void Board_score_is_zero_if_board_does_not_win()
     {
+        var board = new BingoBoard(Sample[2..7]);
+
         Assert.False(board.HasWon);
         Assert.Equal(0, board.Score);
     }
@@ -71,7 +81,7 @@ public class BingoShould
             board.Score);
     }
 
-    public static IEnumerable<CallIndex> Row_1(string[] board) =>
+    private static IEnumerable<CallIndex> Row_1(string[] board) =>
         ParseRows(board).First().Select((@int, index) => new CallIndex(@int, index));
 
     public static IEnumerable<IEnumerable<object>> For_all_boards()
@@ -80,6 +90,19 @@ public class BingoShould
         {
             var rawBoard = Sample[i..(i + 5)];
             yield return new object[] { rawBoard, new BingoBoard(rawBoard) };
+        }
+    }
+
+    public static IEnumerable<IEnumerable<object>> For_all_boards_per_dimension()
+    {
+        for (var i = 2; i < Sample.Length; i += 6)
+        {
+            var rawBoard = Sample[i..(i + 5)];
+
+            for (int j = 0; j < 5; j++)
+            {
+                yield return new object[] { rawBoard, new BingoBoard(rawBoard), j };
+            }
         }
     }
 

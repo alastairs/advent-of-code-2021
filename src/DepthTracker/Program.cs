@@ -31,7 +31,14 @@ app.MapGet("/power-consumption", async () =>
 app.MapGet("/bingo", async () =>
 {
     var text = await File.ReadAllLinesAsync("bingo.txt");
-    return "Bingo!";
+    var bingo = new Bingo.Bingo(text);
+    var (winningNumber, winningBoard) = bingo.FindWinner();
+    var (finalWinningNumber, finalWinningBoard) = bingo.FindFinalWinner();
+    return new[]
+    {
+        new { winningNumber, winningBoard.Score },
+        new { winningNumber = finalWinningNumber, finalWinningBoard.Score }
+    };
 });
 
 app.Run();
