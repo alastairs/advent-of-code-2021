@@ -1,8 +1,42 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
 namespace Bingo.Tests;
+
+public class BingoBoard
+{
+    private const int BoardSize = 5;
+
+    private int[] _board;
+
+    public BingoBoard(string[] descriptor)
+    {
+        _board = descriptor.SelectMany(l =>
+            l.Split()
+                .Where(i => i != string.Empty)
+                .Select(i => int.Parse(i)))
+                .ToArray();
+    }
+
+    public static implicit operator string[](BingoBoard bingoBoard)
+    {
+        int[] board = bingoBoard._board;
+        var @return = new string[BoardSize];
+
+        for (var i = 0; i < BoardSize; i++)
+        {
+            @return[i] = string.Join(
+                " ",
+                board.Skip(i * BoardSize)
+                    .Take(BoardSize)
+                    .Select(i => i.ToString().PadLeft(2, ' ')));
+        }
+
+        return @return;
+    }
+}
 
 public class BingoShould
 {
@@ -10,10 +44,10 @@ public class BingoShould
     public void Parse_input_into_game()
     {
         var input = Sample[0];
-        var boards = new List<string[]>();
+        var boards = new List<BingoBoard>();
         for (var i = 2; i < Sample.Length; i += 6)
         {
-            boards.Add(Sample[i..(i + 5)]);
+            boards.Add(new BingoBoard(Sample[i..(i + 5)]));
         }
 
         Assert.Equal(Sample[0], input);
