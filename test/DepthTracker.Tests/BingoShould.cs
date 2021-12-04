@@ -12,17 +12,11 @@ public class BingoShould
     [Fact]
     public void Parse_input_into_game()
     {
-        var input = Sample[0];
-        var boards = new List<BingoBoard>();
-        for (var i = 2; i < Sample.Length; i += 6)
-        {
-            boards.Add(new BingoBoard(Sample[i..(i + 5)]));
-        }
-
-        Assert.Equal(Sample[0], input);
-        Assert.Equal(Sample[2..7], boards[0]);
-        Assert.Equal(Sample[8..13], boards[1]);
-        Assert.Equal(Sample[14..^1], boards[2]);
+        var bingo = new Bingo(Sample);
+        Assert.Equal(Sample[0], string.Join(",", bingo.NumbersToCall));
+        Assert.Equal(Sample[2..7], bingo.Boards.ElementAt(0));
+        Assert.Equal(Sample[8..13], bingo.Boards.ElementAt(1));
+        Assert.Equal(Sample[14..^1], bingo.Boards.ElementAt(2));
     }
 
     [Theory, MemberData(nameof(Board_1_Row_1))]
@@ -73,6 +67,12 @@ public class BingoShould
         Assert.Equal(
             ParseSampleSubset(Sample[3..7]).SelectMany(i => i).Sum(),
             board.Score);
+    }
+
+    [Fact]
+    public void Determine_winning_board()
+    {
+        var bingo = new Bingo(Sample);
     }
 
     public static IEnumerable<IEnumerable<CallIndex>> Board_1_Row_1()

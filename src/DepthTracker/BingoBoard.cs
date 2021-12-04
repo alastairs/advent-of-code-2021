@@ -2,6 +2,23 @@ using System.Text;
 
 namespace Bingo;
 
+public class Bingo
+{
+    private readonly ICollection<BingoBoard> _boards = new List<BingoBoard>();
+
+    public Bingo(string[] sample)
+    {
+        NumbersToCall = sample[0].Split(",").Select(s => s.Trim()).Select(s => int.Parse(s)).ToList();
+        for (var i = 2; i < sample.Length; i += 6)
+        {
+            _boards.Add(new BingoBoard(sample[i..(i + 5)]));
+        }
+    }
+
+    public IEnumerable<int> NumbersToCall { get; }
+    public IEnumerable<BingoBoard> Boards => _boards;
+}
+
 public class BingoBoard
 {
     private const int BoardSize = 5;
