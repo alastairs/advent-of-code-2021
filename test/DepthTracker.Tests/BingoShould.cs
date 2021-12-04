@@ -10,6 +10,7 @@ public class BingoBoard
     private const int BoardSize = 5;
 
     private int[] _board;
+    private bool[] _marked = new bool[BoardSize*BoardSize];
 
     public BingoBoard(string[] descriptor)
     {
@@ -36,6 +37,22 @@ public class BingoBoard
 
         return @return;
     }
+
+    internal void Mark(int v)
+    {
+        var foundIndex = Array.IndexOf(_board, v);
+        if (foundIndex == -1)
+        {
+            return;
+        }
+
+        _marked[foundIndex] = true;
+    }
+
+    internal bool IsMarked(int row, int column)
+    {
+        return _marked[row + column];
+    }
 }
 
 public class BingoShould
@@ -56,7 +73,32 @@ public class BingoShould
         Assert.Equal(Sample[14..^1], boards[2]);
     }
 
-    public string[] Sample = new [] {
+    [Theory, MemberData(nameof(Board_1_Row_1))]
+    public void Mark_a_called_number(CallIndex tuple)
+    {
+        var (called, index) = tuple;
+        var board = new BingoBoard(Sample[2..7]);
+
+        board.Mark(called);
+
+        Assert.True(board.IsMarked(0, index));
+        Assert.False(board.IsMarked(0, index + 1));
+    }
+
+    public static IEnumerable<IEnumerable<CallIndex>> Board_1_Row_1()
+    {
+        var ps = Sample[2].Split().Where(i => i != string.Empty)
+                        .Select((@int, index) => new CallIndex(int.Parse(@int), index));
+
+        foreach (var p in ps)
+        {
+            yield return new[] { p };
+        }
+    }
+
+    public record CallIndex(int called, int index);
+
+    public static string[] Sample = new [] {
         "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1",
         "",
         "22 13 17 11  0",
