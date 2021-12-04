@@ -32,53 +32,50 @@ public class BingoShould
         Assert.Equal(24, winningNumber);
     }
 
-    [Theory, MemberData(nameof(Board_1_Row_1))]
-    public void Mark_a_called_number(CallIndex tuple)
+    [Theory, MemberData(nameof(For_all_boards))]
+    public void Mark_a_called_number(string[] rawBoard, BingoBoard board)
     {
-        var (called, index) = tuple;
-        Board1.Mark(called);
+        var row1 = Row_1(rawBoard);
+        row1.ForEach(ci => board.Mark(ci.called));
 
-        Assert.True(Board1.IsMarked(0, index));
-        Assert.False(Board1.IsMarked(0, index + 1));
+        Assert.All(row1, ci => board.IsMarked(0, ci.index));
+        Assert.All(row1, ci => board.IsMarked(0, ci.index + 1));
     }
 
     [Fact]
     public void RowIsComplete_is_true_if_full_row_is_marked()
     {
-        Board_1_Row_1().SelectMany(ci => ci)
+        Row_1(Board1).Select(ci => ci)
             .ForEach(ci => Board1.Mark(ci.called));
 
         Assert.True(Board1.RowIsComplete(0));
     }
 
-    [Fact]
-    public void ColumnIsComplete_is_true_if_full_column_is_marked()
+    [Theory, MemberData(nameof(For_all_boards))]
+    public void ColumnIsComplete_is_true_if_full_column_is_marked(string[] rawBoard, BingoBoard board)
     {
-        var column = Sample[2..7].Select(r => r.Split().Where(i => i != string.Empty).First()).Select(s => int.Parse(s)).ToArray();
-        Assert.Equal(new[] { 22, 8, 21, 6, 1 }, column);
+        var column = ParseSampleSubset(board).Select(r => r.First()).ToArray();
+        column.ForEach(c => board.Mark(c));
 
-        column.ForEach(c => Board1.Mark(c));
-
-        Assert.True(Board1.ColumnIsComplete(0));
+        Assert.True(board.ColumnIsComplete(0));
     }
 
-    [Fact]
-    public void Board_score_is_zero_if_board_does_not_win()
+    [Theory, MemberData(nameof(For_all_boards))]
+    public void Board_score_is_zero_if_board_does_not_win(string[] _, BingoBoard board)
     {
-        Assert.False(Board1.HasWon);
-        Assert.Equal(0, Board1.Score);
+        Assert.False(board.HasWon);
+        Assert.Equal(0, board.Score);
     }
 
-    [Fact]
-    public void Board_score_is_sum_of_all_unmarked_numbers()
+    [Theory, MemberData(nameof(For_all_boards))]
+    public void Board_score_is_sum_of_all_unmarked_numbers(string[] rawBoard, BingoBoard board)
     {
-        var board = Board1;
-        Board_1_Row_1().SelectMany(ci => ci)
-            .ForEach(ci => Board1.Mark(ci.called));
+        Row_1(rawBoard).Select(ci => ci)
+            .ForEach(ci => board.Mark(ci.called));
 
         Console.WriteLine(board);
         Assert.Equal(
-            ParseSampleSubset(Sample[3..7]).SelectMany(i => i).Sum(),
+            ParseSampleSubset(rawBoard[1..^1]).SelectMany(i => i).Sum(),
             board.Score);
     }
 
@@ -88,15 +85,19 @@ public class BingoShould
         var bingo = new Bingo(Sample);
     }
 
-    public static IEnumerable<IEnumerable<CallIndex>> Board_1_Row_1()
-    {
-        var ps = Sample[2].Split().Where(i => i != string.Empty)
-                        .Select((@int, index) => new CallIndex(int.Parse(@int), index));
+    public static IEnumerable<CallIndex> Row_1(string[] board) => 
+        board.First().Split().Where(i => i != string.Empty)
+            .Select((@int, index) => new CallIndex(int.Parse(@int), index));
 
-        foreach (var p in ps)
-        {
-            yield return new[] { p };
-        }
+    public static IEnumerable<IEnumerable<object>> For_all_boards()
+    {
+        // for (var i = 2; i < Sample.Length; i += 6)
+        // {
+        //     var rawBoard = Sample[i..(i + 5)];
+        //     yield return new object[] { rawBoard, new BingoBoard(rawBoard) };
+        // }
+
+        yield return new object[] { Sample[2..7], new BingoBoard(Sample[2..7]) };
     }
 
     public record CallIndex(int called, int index);
