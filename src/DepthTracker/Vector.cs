@@ -38,5 +38,13 @@ public record Vector(Point Start, Point Finish)
         }
     }
 
-    public bool IntersectsWith(Vector other) => Start == other.Start || Finish == other.Finish || Start == other.Finish;
+    public bool IntersectsWith(Vector other)
+    {
+        if (Start == other.Start || Finish == other.Finish || Start == other.Finish) return true;
+
+        var points = EnumeratePoints();
+        var otherPoints = other.EnumeratePoints();
+
+        return points.Intersect(otherPoints).Any();
+    }
 };

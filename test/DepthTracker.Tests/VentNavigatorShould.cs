@@ -72,6 +72,14 @@ public class VentNavigatorShould
         Assert.False(v1.IntersectsWith(new Point(0, 4)));
     }
 
+    [Fact]
+    public void IntersectsWithVector_is_true_when_the_vectors_intersect_anywhere_in_their_path()
+    {
+        var vertical = new Vector(new Point(1, -1), new Point(1, 1));
+        var horizontal = new Vector(new Point(0, 0), new Point(3, 0));
+        Assert.True(vertical.IntersectsWith(horizontal));
+    }
+
     public static IEnumerable<IEnumerable<object>> VectorParsingSamples => new[]
     {
         new object[] 
