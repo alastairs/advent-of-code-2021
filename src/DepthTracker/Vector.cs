@@ -13,4 +13,8 @@ public record Vector(Point Start, Point Finish)
     public bool IsHorizontal => Start.X == Finish.X;
 
     public bool IsVertical => Start.Y == Finish.Y;
+
+    public bool IntersectsWith(Point p) => Start == p;
+
+    public bool IntersectsWith(Vector other) => Start == other.Start;
 };

@@ -23,6 +23,18 @@ public class VentNavigatorShould
         Assert.Equal(expected, Vector.FromString(line).IsVertical);
     }
 
+    [Fact]
+    public void IntersectsWithPoint_is_true_when_both_vectors_start_at_the_same_point()
+    {
+        var v1 = new Vector(new Point(0, 0), new Point(1, 1));
+        var v2 = new Vector(new Point(0, 0), new Point(1, 0));
+
+        Assert.True(v1.IntersectsWith(new Point(0, 0)));
+        Assert.True(v2.IntersectsWith(new Point(0, 0)));
+        Assert.True(v1.IntersectsWith(v2));
+        Assert.True(v2.IntersectsWith(v1));
+    }
+
     public static IEnumerable<IEnumerable<object>> VectorParsingSamples => new[]
     {
         new object[] 
