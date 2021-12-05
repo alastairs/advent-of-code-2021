@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace DepthTracker.Tests;
@@ -100,27 +99,3 @@ public class VentNavigatorShould
         "911,808 -> 324,221"
     };
 }
-
-public record Point(int X, int Y)
-{
-    public static Point FromString(string descriptor)
-    {
-        var startCoords = descriptor.Split(",");
-        return new Point(int.Parse(startCoords[0]), int.Parse(startCoords[1]));
-    }
-}
-
-public record Vector(Point Start, Point Finish)
-{
-    public static Vector FromString(string descriptor)
-    {
-        var items = descriptor.Split(" ");
-        var (start, finish) = (Point.FromString(items[0]), Point.FromString(items[2]));
-
-        return new Vector(start, finish);
-    }
-
-    public bool IsHorizontal => Start.X == Finish.X;
-
-    public bool IsVertical => Start.Y == Finish.Y;
-};
