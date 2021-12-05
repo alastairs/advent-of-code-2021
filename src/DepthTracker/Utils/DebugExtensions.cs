@@ -24,7 +24,7 @@ public static class Debug
         return $"[{string.Join(", ", array)}]";
     }
 
-    public static void WriteLine(object obj)
+    public static void WriteLine(object? obj = null)
     {
         if (!Enabled)
         {
@@ -32,5 +32,15 @@ public static class Debug
         }
 
         Console.WriteLine(obj);
+    }
+
+    public static void Write(object? obj = null)
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        Console.Write(obj);
     }
 }
