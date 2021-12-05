@@ -69,6 +69,7 @@ public class VentNavigatorShould
         Assert.All(
             pointsInV1,
             p => Assert.True(v1.IntersectsWith(p)));
+        Assert.False(v1.IntersectsWith(new Point(0, 4)));
     }
 
     public static IEnumerable<IEnumerable<object>> VectorParsingSamples => new[]
