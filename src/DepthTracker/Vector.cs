@@ -10,9 +10,9 @@ public record Vector(Point Start, Point Finish)
         return new Vector(start, finish);
     }
 
-    public bool IsHorizontal => Start.X == Finish.X;
+    public bool IsHorizontal => Start.Y == Finish.Y;
 
-    public bool IsVertical => Start.Y == Finish.Y;
+    public bool IsVertical => Start.X == Finish.X;
 
     public bool IntersectsWith(Point p)
     {
@@ -22,14 +22,14 @@ public record Vector(Point Start, Point Finish)
 
     private IEnumerable<Point> EnumeratePoints()
     {
-        if (IsVertical)
+        if (IsHorizontal)
         {
             for (var i = Start.X; i <= Finish.X; i++)
             {
                 yield return Start with { X = Start.X + i };
             }
         }
-        else if (IsHorizontal)
+        else if (IsVertical)
         {
             for (var i = Start.Y; i <= Finish.Y; i++)
             {

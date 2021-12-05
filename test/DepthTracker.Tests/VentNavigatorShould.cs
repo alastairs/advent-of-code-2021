@@ -103,13 +103,13 @@ public class VentNavigatorShould
         new object[]
         {
             VectorSamples[0],
-            false // is vertical
+            true // is horizontal
         },
 
         new object[]
         {
             VectorSamples[1],
-            true // is horizontal
+            false // is vertical
         },
 
         new object[]
@@ -124,13 +124,13 @@ public class VentNavigatorShould
         new object[]
         {
             VectorSamples[0],
-            true // is vertical
+            false // is horizontal
         },
 
         new object[]
         {
             VectorSamples[1],
-            false // is horizontal
+            true // is vertical
         },
 
         new object[]
@@ -142,8 +142,8 @@ public class VentNavigatorShould
 
     private static readonly string[] VectorSamples =
     {
-        "0,9 -> 5,9",
-        "66,77 -> 66,92",
-        "911,808 -> 324,221"
+        "0,9 -> 5,9",         // horizontal as Y = Y
+        "66,77 -> 66,92",     // vertical as X = X
+        "911,808 -> 324,221"  // neither
     };
 }
