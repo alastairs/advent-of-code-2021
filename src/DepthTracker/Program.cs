@@ -41,4 +41,11 @@ app.MapGet("/bingo", async () =>
     };
 });
 
+app.MapGet("/vent-navigation", async () =>
+{
+    var text = await File.ReadAllLinesAsync("vent-navigation.txt");
+
+    return text.Select(l => new { line = l, firstChar = l[0] });
+});
+
 app.Run();
