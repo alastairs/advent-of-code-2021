@@ -41,11 +41,24 @@ app.MapGet("/bingo", async () =>
     };
 });
 
-app.MapGet("/vent-navigation", async () =>
-{
-    var text = await File.ReadAllLinesAsync("vent-navigation.txt");
+//app.MapGet("/vent-navigation", async () =>
+//{
+//    var text = await File.ReadAllLinesAsync("vent-navigation.txt");
 
-    return text.Select(l => new { line = l, firstChar = l[0] });
-});
+//    var navigator = new Navigator(text);
+//    var dangerPoints = navigator.FindDangerPoints().ToArray();
+
+//    return new
+//    {
+//        count = dangerPoints.Length,
+//        points = dangerPoints
+//    };
+//});
+
+Debug.Enabled = false;
+var text = await File.ReadAllLinesAsync("vent-navigation.txt");
+
+var navigator = new Navigator(text);
+navigator.FindDangerPoints().ForEach(Console.WriteLine);
 
 app.Run();

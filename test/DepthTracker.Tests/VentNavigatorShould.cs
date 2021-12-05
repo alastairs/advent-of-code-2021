@@ -80,10 +80,11 @@ public class VentNavigatorShould
         var horizontal = new Vector(new Point(0, 0), new Point(3, 0));
         Assert.True(vertical.IntersectsWith(horizontal));
     }
-
+    
     [Fact]
     public void Find_the_five_danger_points_in_the_sample()
     {
+        Debug.Enabled = true;
         const string sample = @"0,9 -> 5,9
 8,0 -> 0,8
 9,4 -> 3,4
