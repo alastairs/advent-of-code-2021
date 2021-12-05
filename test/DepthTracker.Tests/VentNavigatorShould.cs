@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace DepthTracker.Tests;
@@ -57,6 +58,17 @@ public class VentNavigatorShould
         Assert.True(v2.IntersectsWith(new Point(1, 1)));
         Assert.True(v1.IntersectsWith(v2));
         Assert.True(v2.IntersectsWith(v1));
+    }
+
+    [Fact]
+    public void IntersectsWithPoint_is_true_when_the_point_is_within_the_vector()
+    {
+        var v1 = new Vector(new Point(0, 0), new Point(0, 3));
+
+        var pointsInV1 = Enumerable.Range(0, 4).Select(y => new Point(0, y));
+        Assert.All(
+            pointsInV1,
+            p => Assert.True(v1.IntersectsWith(p)));
     }
 
     public static IEnumerable<IEnumerable<object>> VectorParsingSamples => new[]
@@ -128,7 +140,7 @@ public class VentNavigatorShould
         }
     };
 
-    private static readonly string[] VectorSamples = new[]
+    private static readonly string[] VectorSamples =
     {
         "0,9 -> 5,9",
         "66,77 -> 66,92",
