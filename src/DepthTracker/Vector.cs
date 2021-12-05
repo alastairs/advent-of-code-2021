@@ -16,5 +16,5 @@ public record Vector(Point Start, Point Finish)
 
     public bool IntersectsWith(Point p) => Start == p || Finish == p;
 
-    public bool IntersectsWith(Vector other) => Start == other.Start || Finish == other.Finish;
+    public bool IntersectsWith(Vector other) => Start == other.Start || Finish == other.Finish || Start == other.Finish;
 };
