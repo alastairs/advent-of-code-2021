@@ -14,7 +14,7 @@ public static class Debug
         return value ? "✅" : "❌";
     }
 
-    public static string ArrayToString<T>(this T[] array)
+    public static string ArrayToString<T>(this IList<T> array)
     {
         if (!Enabled)
         {

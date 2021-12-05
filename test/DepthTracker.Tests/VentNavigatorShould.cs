@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -78,6 +79,33 @@ public class VentNavigatorShould
         var vertical = new Vector(new Point(1, -1), new Point(1, 1));
         var horizontal = new Vector(new Point(0, 0), new Point(3, 0));
         Assert.True(vertical.IntersectsWith(horizontal));
+    }
+
+    [Fact]
+    public void Find_the_five_danger_points_in_the_sample()
+    {
+        const string sample = @"0,9 -> 5,9
+8,0 -> 0,8
+9,4 -> 3,4
+2,2 -> 2,1
+7,0 -> 7,4
+6,4 -> 2,0
+0,9 -> 2,9
+3,4 -> 1,4
+0,0 -> 8,8
+5,5 -> 8,2";
+
+        var sut = new Navigator(sample.Split(Environment.NewLine));
+
+        Assert.Equal(new[]
+        {
+            new Point(3, 4),
+            new Point(7, 4),
+            new Point(0, 9),
+            new Point(1, 9),
+            new Point(2, 9)
+        }.OrderBy(p => p.Y), sut.FindDangerPoints().ToArray().OrderBy(p => p.Y));
+        Assert.Equal(5, sut.FindDangerPoints().Count());
     }
 
     public static IEnumerable<IEnumerable<object>> VectorParsingSamples => new[]
