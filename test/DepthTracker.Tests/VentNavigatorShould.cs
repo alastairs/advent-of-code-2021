@@ -18,6 +18,12 @@ public class VentNavigatorShould
         Assert.Equal(expected, Vector.FromString(line).IsHorizontal);
     }
 
+    [Theory, MemberData(nameof(VerticalVectors))]
+    public void IsVertical_is_true_when_the_Y_components_are_equal(string line, bool expected)
+    {
+        Assert.Equal(expected, Vector.FromString(line).IsVertical);
+    }
+
     public static IEnumerable<IEnumerable<object>> VectorParsingSamples => new[]
     {
         new object[] 
@@ -66,6 +72,27 @@ public class VentNavigatorShould
         }
     };
 
+    public static IEnumerable<IEnumerable<object>> VerticalVectors => new[]
+    {
+        new object[]
+        {
+            VectorSamples[0],
+            true // is vertical
+        },
+
+        new object[]
+        {
+            VectorSamples[1],
+            false // is horizontal
+        },
+
+        new object[]
+        {
+            VectorSamples[2],
+            false // is neither
+        }
+    };
+
     private static readonly string[] VectorSamples = new[]
     {
         "0,9 -> 5,9",
@@ -94,4 +121,6 @@ public record Vector(Point Start, Point Finish)
     }
 
     public bool IsHorizontal => Start.X == Finish.X;
+
+    public bool IsVertical => Start.Y == Finish.Y;
 };
