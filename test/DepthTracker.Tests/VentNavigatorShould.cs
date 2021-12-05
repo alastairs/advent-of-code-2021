@@ -125,6 +125,24 @@ public class VentNavigatorShould
         {
             VectorSamples[2],
             false // is neither
+        },
+
+        new object[]
+        {
+            VectorSamples[3],
+            true // is horizontal
+        },
+
+        new object[]
+        {
+            VectorSamples[4],
+            false // is vertical
+        },
+
+        new object[]
+        {
+            VectorSamples[5],
+            false // is neither
         }
     };
 
@@ -146,13 +164,34 @@ public class VentNavigatorShould
         {
             VectorSamples[2],
             false // is neither
+        },
+
+        new object[]
+        {
+            VectorSamples[3],
+            false // is horizontal
+        },
+
+        new object[]
+        {
+            VectorSamples[4],
+            true // is vertical
+        },
+
+        new object[]
+        {
+            VectorSamples[5],
+            false // is neither
         }
     };
 
     private static readonly string[] VectorSamples =
     {
-        "0,9 -> 5,9",         // horizontal as Y = Y
-        "66,77 -> 66,92",     // vertical as X = X
-        "911,808 -> 324,221"  // neither
+        "0,9 -> 5,9",         // horizontal as Y = Y, rightward
+        "66,77 -> 66,92",     // vertical as X = X, downward
+        "911,808 -> 324,221", // neither, down-right
+        "5,9 -> 0,9",         // horizontal as Y = Y, leftward
+        "66,92 -> 66,77",     // vertical as X = X, upward
+        "324,221 -> 911,808"  // neither, up-left
     };
 }
